@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+	<qresource>
+		<file alias="icon">img/icon64.png</file>
+		<file alias="default_de.qm">qtr/default_de.qm</file>
+	</qresource>
+</RCC>
