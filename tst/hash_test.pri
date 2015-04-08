@@ -1,4 +1,4 @@
-include(def_test.pro.inc)
+include(def_test.pri)
 
 SRC_DIR = ../src/$$TEST
 
