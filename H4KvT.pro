@@ -26,3 +26,7 @@ run.depends = $$TARGET
 run.commands = $$PWD/$$TARGET
 QMAKE_EXTRA_TARGETS += run
 
+qtr.depends = $$SOURCES
+qtr.commands = lupdate $$_PRO_FILE_ -locations none && lrelease $$_PRO_FILE_
+QMAKE_EXTRA_TARGETS += qtr
+
