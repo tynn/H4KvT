@@ -7,7 +7,6 @@ framework.
 
 #### Supported hash functions
 
-* [md5](https://www.ietf.org/rfc/rfc1321)
-
-
+ * [md5](https://tools.ietf.org/html/rfc1321)
+ * [sha1](https://tools.ietf.org/html/rfc3174)
 

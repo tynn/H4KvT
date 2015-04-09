@@ -17,6 +17,7 @@
  *	along with H4KvT. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <streambuf>
 #include <fstream>
 #include <sstream>
 
@@ -29,38 +30,62 @@
 #include "window.hpp"
 
 #include "md5/md5buf.hpp"
+#include "sha1/sha1buf.hpp"
 
 
-#define ANY(vals,val) (vals.md5==val)
-#define ALL(vals,val) (vals.md5==val)
 struct Vals {
-	Vals() : Vals("", "") { }
-	Vals(const QString &qname, const QString &qpath) : md5("")
+	Vals() : Vals("", "") { _f = false; }
+	Vals(const QString &qname, const QString &qpath)
+		: md5(""), sha1(""), _f(true)
 	{
 		name = qname.toStdString();
 		path = qpath.toStdString();
 	}
 	std::string name, path;
-	std::string md5;
+	std::string md5, sha1;
+	bool _f;
 };
+#define ANY(vals,val) (vals.md5==val||vals.sha1==val)
+#define ALL(vals,val) (vals.md5==val&&vals.sha1==val)
+
+static Vals & operator<<=(Vals &left, const Vals &right)
+{
+	left = right;
+	left._f = false;
+	return left;
+}
 
 static Vals & operator+=(Vals &left, const Vals &right)
 {
-	if (left.path != right.path)
-		return left = right;
+	if (right._f || left.path != right.path)
+		return left <<= right;
 	if (right.md5 != "")
 		left.md5 = right.md5;
+	if (right.sha1 != "")
+		left.sha1 = right.sha1;
 	return left;
+}
+
+static void hash(const std::string filename, std::streambuf &buf)
+{
+	std::ifstream in(filename);
+	in.exceptions(std::ifstream::failbit|std::ifstream::badbit);
+	std::ostream out(&buf);
+	out << in.rdbuf();
 }
 
 static std::string md5hash(const std::string filename)
 {
-	std::ifstream in(filename);
-	in.exceptions(std::ifstream::failbit|std::ifstream::badbit);
 	md5buf md5;
-	std::ostream out(&md5);
-	out << in.rdbuf();
+	hash(filename, md5);
 	return md5.hexdigest();
+}
+
+static std::string sha1hash(const std::string filename)
+{
+	sha1buf sha1;
+	hash(filename, sha1);
+	return sha1.hexdigest();
 }
 
 static Vals update(int which, Vals vals)
@@ -70,6 +95,10 @@ static Vals update(int which, Vals vals)
 			case 0:
 				if (vals.md5 == "")
 					vals.md5 = md5hash(vals.path);
+				break;
+			case 1:
+				if (vals.sha1 == "")
+					vals.sha1 = sha1hash(vals.path);
 				break;
 		}
 	} catch (std::ifstream::failure &) {
@@ -145,7 +174,10 @@ int main(int argc, char **argv)
 			html << "<div style='margin-bottom:7; margin-left:23; font-size:13px'>" << vals.path << "</div>";
 			if (!ALL(vals,"")) {
 				html << "<div style='font-size:13px'><table>";
-				html << "<tr><td>md5: </td><td class='h" << vals.md5 << "'>" << vals.md5 << "</td</tr>";
+				if (vals.md5 != "")
+					html << "<tr><td>md5: </td><td class='h" << vals.md5 << "'>" << vals.md5 << "</td</tr>";
+				if (vals.sha1 != "")
+					html << "<tr><td>sha1: </td><td class='h" << vals.sha1 << "'>" << vals.sha1 << "</td</tr>";
 				html << "</table></div>";
 			}
 			text->setHtml(QString::fromStdString(html.str()));
@@ -176,7 +208,7 @@ int main(int argc, char **argv)
 	/* hashing method */
 	QComboBox *meth = new QComboBox;
 	meth->addItem("md5");
-	//meth->addItem("sha1");
+	meth->addItem("sha1");
 	//meth->addItem("sha256");
 	//meth->addItem("sha512");
 	meth->setToolTip(Window::tr("Hashing method"));
