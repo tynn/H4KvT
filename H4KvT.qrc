@@ -2,6 +2,6 @@
 <RCC version="1.0">
 	<qresource>
 		<file alias="icon">img/icon64.png</file>
-		<file alias="default_de.qm">qtr/default_de.qm</file>
+		<file alias="H4KvT_de.qm">qtr/H4KvT_de.qm</file>
 	</qresource>
 </RCC>

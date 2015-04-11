@@ -148,7 +148,7 @@ int main(int argc, char **argv)
 
 	/* translations */
 	QTranslator qtr;
-	if (qtr.load("default_" + QLocale::system().name(), ":/"))
+	if (qtr.load("H4KvT_" + QLocale::system().name(), ":/"))
 		app.installTranslator(&qtr);
 
 	/* display information */

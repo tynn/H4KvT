@@ -14,8 +14,8 @@ win32:RC_ICONS = img/icon.ico
 
 DISTFILES += LICENSE README* img/* qtr/*.qm tst/*
 
-RESOURCES += default.qrc
-TRANSLATIONS += $$files(qtr/default_*.ts)
+RESOURCES += H4KvT.qrc
+TRANSLATIONS += $$files(qtr/H4KvT_*.ts)
 
 SOURCES += $$files(src/*.cpp, true)
 HEADERS += $$files(src/*.h, true) $$files(src/*.hpp, true)
