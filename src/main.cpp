@@ -29,6 +29,7 @@
 
 #include "window.hpp"
 
+#include "hashbuf.hpp"
 #include "md5/md5buf.hpp"
 #include "sha1/sha1buf.hpp"
 
@@ -66,26 +67,13 @@ static Vals & operator+=(Vals &left, const Vals &right)
 	return left;
 }
 
-static void hash(const std::string filename, std::streambuf &buf)
+static std::string hash(const std::string filename, hashbuf &buf)
 {
 	std::ifstream in(filename);
 	in.exceptions(std::ifstream::failbit|std::ifstream::badbit);
 	std::ostream out(&buf);
 	out << in.rdbuf();
-}
-
-static std::string md5hash(const std::string filename)
-{
-	md5buf md5;
-	hash(filename, md5);
-	return md5.hexdigest();
-}
-
-static std::string sha1hash(const std::string filename)
-{
-	sha1buf sha1;
-	hash(filename, sha1);
-	return sha1.hexdigest();
+	return buf.hexdigest();
 }
 
 static Vals update(int which, Vals vals)
@@ -93,12 +81,16 @@ static Vals update(int which, Vals vals)
 	try {
 		switch (which) {
 			case 0:
-				if (vals.md5 == "")
-					vals.md5 = md5hash(vals.path);
+				if (vals.md5 == "") {
+					md5buf buf;
+					vals.md5 = hash(vals.path, buf);
+				}
 				break;
 			case 1:
-				if (vals.sha1 == "")
-					vals.sha1 = sha1hash(vals.path);
+				if (vals.sha1 == "") {
+					sha1buf buf;
+					vals.sha1 = hash(vals.path, buf);
+				}
 				break;
 		}
 	} catch (std::ifstream::failure &) {

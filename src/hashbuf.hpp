@@ -17,27 +17,15 @@
  *	along with H4KvT. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef md5buf_class
-#define md5buf_class
+#ifndef hashbuf_class
+#define hashbuf_class
 
-#include <cstdint>
-#include "../hashbuf.hpp"
+#include <streambuf>
+#include <string>
 
-class md5buf : public hashbuf
+class hashbuf : public std::streambuf
 {
-	public:
-		explicit md5buf();
-		std::string hexdigest();
-
-	private:
-		int_type overflow(int_type);
-		int sync();
-
-		void update_md5(uint32_t &, uint32_t &, uint32_t &, uint32_t &);
-
-		char buf[64];
-		uint32_t A, B, C, D, dig[4];
-		uint64_t len;
+	public: virtual std::string hexdigest() = 0;
 };
 
 #endif

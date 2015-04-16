@@ -19,6 +19,9 @@
 
 /* https://tools.ietf.org/html/rfc1321 */
 
+#ifndef MD5
+
+
 #define _A (0x67452301)
 #define _B (0xefcdab89)
 #define _C (0x98badcfe)
@@ -190,4 +193,7 @@ MD5TEST("message digest",f96b697d7cb7938d525a2f31aaf161d0) \
 MD5TEST("abcdefghijklmnopqrstuvwxyz",c3fcd3d76192e4007dfb496cca67e13b) \
 MD5TEST("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",d174ab98d277d9f5a5611c2c9f419d9f) \
 MD5TEST("12345678901234567890123456789012345678901234567890123456789012345678901234567890",57edf4a22be3c955ac49da2e2107b67a)
+
+
+#endif
 

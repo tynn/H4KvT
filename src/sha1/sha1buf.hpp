@@ -17,16 +17,16 @@
  *	along with H4KvT. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <streambuf>
-#include <string>
+#ifndef sha1buf_class
+#define sha1buf_class
 
 #include <cstdint>
+#include "../hashbuf.hpp"
 
-class sha1buf : public std::streambuf
+class sha1buf : public hashbuf
 {
 	public:
 		explicit sha1buf();
-
 		std::string hexdigest();
 
 	private:
@@ -39,4 +39,6 @@ class sha1buf : public std::streambuf
 		uint32_t H0, H1, H2, H3, H4, dig[5];
 		uint64_t len;
 };
+
+#endif
 

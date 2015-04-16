@@ -19,6 +19,9 @@
 
 /* https://tools.ietf.org/html/rfc3174 */
 
+#ifndef SHA1
+
+
 #define _H0 (0x67452301)
 #define _H1 (0xEFCDAB89)
 #define _H2 (0x98BADCFE)
@@ -63,4 +66,7 @@ SHA1TEST("abc",a9993e364706816aba3e25717850c26c9cd0d89d) \
 SHA1TEST("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",84983e441c3bd26ebaae4aa1f95129e5e54670f1) \
 SHA1TEST("a",86f7e437faa5a7fce15d1ddcb9eaeaea377667b8) \
 SHA1TEST("0123456701234567012345670123456701234567012345670123456701234567",e0c094e867ef46c350ef54a7f59dd60bed92ae83) \
+
+
+#endif
 
