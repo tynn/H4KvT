@@ -172,7 +172,11 @@ int main(int argc, char **argv)
 					html << "<tr><td>sha1: </td><td class='h" << vals.sha1 << "'>" << vals.sha1 << "</td</tr>";
 				html << "</table></div>";
 			}
+			int horizontal = text->horizontalScrollBar()->value();
+			int vertical = text->verticalScrollBar()->value();
 			text->setHtml(QString::fromStdString(html.str()));
+			text->horizontalScrollBar()->setValue(horizontal);
+			text->verticalScrollBar()->setValue(vertical);
 			test->setStyleSheet(ANY(vals,hashVal) ? "color:green" : "");
 		}});
 
