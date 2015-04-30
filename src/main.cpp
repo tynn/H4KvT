@@ -67,7 +67,7 @@ static Vals & operator+=(Vals &left, const Vals &right)
 	return left;
 }
 
-static std::string hash(const std::string filename, hashbuf &buf)
+static std::string hash(const std::string filename, hashbuf &&buf)
 {
 	std::ifstream in(filename);
 	in.exceptions(std::ifstream::failbit|std::ifstream::badbit);
@@ -81,16 +81,12 @@ static Vals update(int which, Vals vals)
 	try {
 		switch (which) {
 			case 0:
-				if (vals.md5 == "") {
-					md5buf buf;
-					vals.md5 = hash(vals.path, buf);
-				}
+				if (vals.md5 == "")
+					vals.md5 = hash(vals.path, md5buf());
 				break;
 			case 1:
-				if (vals.sha1 == "") {
-					sha1buf buf;
-					vals.sha1 = hash(vals.path, buf);
-				}
+				if (vals.sha1 == "")
+					vals.sha1 = hash(vals.path, sha1buf());
 				break;
 		}
 	} catch (std::ifstream::failure &) {
