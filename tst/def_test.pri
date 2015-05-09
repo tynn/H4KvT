@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = tmp/$${TEST}_test
+TARGET = tmp/$${TEST}_test.run
 
 QT -= core gui
 CONFIG += c++11 testcase
