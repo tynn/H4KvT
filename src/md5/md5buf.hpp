@@ -23,21 +23,20 @@
 #include <cstdint>
 #include "../hashbuf.hpp"
 
-class md5buf : public hashbuf
+typedef hashbuf_t<4, uint32_t, 64, uint64_t> _md5buf;
+class md5buf : public _md5buf
 {
 	public:
 		explicit md5buf();
-		std::string hexdigest();
 
 	private:
-		int_type overflow(int_type);
 		int sync();
+		void update();
+		uint32_t val(uint32_t i);
 
 		void update_md5(uint32_t &, uint32_t &, uint32_t &, uint32_t &);
 
-		char buf[64];
-		uint32_t A, B, C, D, dig[4];
-		uint64_t len;
+		uint32_t A, B, C, D;
 };
 
 #endif

@@ -17,29 +17,13 @@
  *	along with H4KvT. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <sstream>
-#include <iomanip>
-
 #include "md5buf.hpp"
 #include "md5.h"
 
 
-md5buf::md5buf() : A(_A), B(_B), C(_C), D(_D), len(0)
-{
-	setp(buf, buf + 63);
-}
+md5buf::md5buf() : _md5buf(), A(_A), B(_B), C(_C), D(_D) { }
 
-md5buf::int_type md5buf::overflow(int_type ch)
-{
-	if (ch != traits_type::eof()) {
-		*pptr() = char(ch);
-		pbump(1);
-		len += 512;
-		update_md5(A, B, C, D);
-		pbump(-64);
-	}
-	return ch;
-}
+void md5buf::update() { update_md5(A, B, C, D); }
 
 int md5buf::sync()
 {
@@ -88,16 +72,5 @@ void md5buf::update_md5(uint32_t &A, uint32_t &B, uint32_t &C, uint32_t &D)
 }
 
 #define _BE(X) (((X&0xff)<<24)|((X&0xff00)<<8)|(X>>8&0xff00)|(X>>24&0xff))
-std::string md5buf::hexdigest()
-{
-	sync();
-	std::stringstream hex;
-	hex << std::hex << std::setfill('0');
-	hex << std::setw(8) << _BE(dig[0]);
-	hex << std::setw(8) << _BE(dig[1]);
-	hex << std::setw(8) << _BE(dig[2]);
-	hex << std::setw(8) << _BE(dig[3]);
-	return hex.str();
-}
-
+uint32_t md5buf::val(uint32_t dig) { return _BE(dig); }
 

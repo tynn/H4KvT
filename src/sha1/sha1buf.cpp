@@ -24,22 +24,9 @@
 #include "sha1.h"
 
 
-sha1buf::sha1buf() : H0(_H0), H1(_H1), H2(_H2), H3(_H3), H4(_H4), len(0)
-{
-	setp(buf, buf + 63);
-}
+sha1buf::sha1buf() : _sha1buf(), H0(_H0), H1(_H1), H2(_H2), H3(_H3), H4(_H4){ }
 
-sha1buf::int_type sha1buf::overflow(int_type ch)
-{
-	if (ch != traits_type::eof()) {
-		*pptr() = char(ch);
-		pbump(1);
-		len += 512;
-		update_sha1(H0, H1, H2, H3, H4);
-		pbump(-64);
-	}
-	return ch;
-}
+void sha1buf::update() { update_sha1(H0, H1, H2, H3, H4); }
 
 int sha1buf::sync()
 {
@@ -91,19 +78,6 @@ void sha1buf::update_sha1(uint32_t &H0, uint32_t &H1, uint32_t &H2, uint32_t &H3
 	}
 
 	_update_sha1(H0, H1, H2, H3, H4, words);
-}
-
-std::string sha1buf::hexdigest()
-{
-	sync();
-	std::stringstream hex;
-	hex << std::hex << std::setfill('0');
-	hex << std::setw(8) << dig[0];
-	hex << std::setw(8) << dig[1];
-	hex << std::setw(8) << dig[2];
-	hex << std::setw(8) << dig[3];
-	hex << std::setw(8) << dig[4];
-	return hex.str();
 }
 
 

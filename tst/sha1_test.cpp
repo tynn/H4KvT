@@ -28,7 +28,7 @@ static std::string sha1sum(const std::string msg)
 	sha1buf sha1;
 	std::ostream out(&sha1);
 	out << msg;
-	return sha1.hexdigest();
+	return sha1.hex();
 }
 
 #define SHA1TEST(msg,digit) if (sha1sum(msg) != #digit) return 1; \

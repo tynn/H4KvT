@@ -28,7 +28,7 @@ static std::string md5sum(const std::string msg)
 	md5buf md5;
 	std::ostream out(&md5);
 	out << msg;
-	return md5.hexdigest();
+	return md5.hex();
 }
 
 #define MD5TEST(msg,digit) if (md5sum(msg) != #digit) return 1;

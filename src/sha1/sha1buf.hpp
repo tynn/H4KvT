@@ -23,21 +23,19 @@
 #include <cstdint>
 #include "../hashbuf.hpp"
 
-class sha1buf : public hashbuf
+typedef hashbuf_t<5, uint32_t, 64, uint64_t> _sha1buf;
+class sha1buf : public _sha1buf
 {
 	public:
 		explicit sha1buf();
-		std::string hexdigest();
 
 	private:
-		int_type overflow(int_type);
 		int sync();
+		void update();
 
 		void update_sha1(uint32_t &, uint32_t &, uint32_t &, uint32_t &, uint32_t &);
 
-		char buf[64];
-		uint32_t H0, H1, H2, H3, H4, dig[5];
-		uint64_t len;
+		uint32_t H0, H1, H2, H3, H4;
 };
 
 #endif

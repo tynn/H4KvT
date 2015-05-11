@@ -73,7 +73,7 @@ static std::string hash(const std::string filename, hashbuf &&buf)
 	in.exceptions(std::ifstream::failbit|std::ifstream::badbit);
 	std::ostream out(&buf);
 	out << in.rdbuf();
-	return buf.hexdigest();
+	return buf.hex();
 }
 
 static Vals update(int which, Vals vals)
