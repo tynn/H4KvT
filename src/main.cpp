@@ -124,6 +124,19 @@ class Stack : public QStackedLayout
 };
 
 
+static bool moreOrLess()
+{
+	const QStringList &arg = QCoreApplication::arguments();
+	int more = arg.lastIndexOf("-more");
+	int less = arg.lastIndexOf("-less");
+
+	if (more == -1 && less == -1)
+		throw 0;
+
+	return more > less;
+}
+
+
 int main(int argc, char **argv)
 {
 	Vals vals;
@@ -197,6 +210,15 @@ int main(int argc, char **argv)
 
 	/* store method */
 	QSettings settings("H4KvT", "H4KvT");
+
+	/* more methods */
+	bool more;
+	try {
+		more = moreOrLess();
+		settings.setValue("MoreHashingMethods", more);
+	} catch (...) {
+		more = settings.value("MoreHashingMethods", false).toBool();
+	}
 
 	/* hashing method */
 	QComboBox *meth = new QComboBox;
