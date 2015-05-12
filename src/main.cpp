@@ -100,7 +100,7 @@ static Vals update(int which, Vals vals)
 class HexVal : public QValidator
 {
 	public:
-		explicit HexVal(QObject * parent=0)
+		explicit HexVal(QObject *parent=0)
 			: QValidator(parent), nonhex("[^0-9a-fA-F]") { }
 
 		QValidator::State validate(QString &input, int &pos) const
@@ -148,7 +148,8 @@ int main(int argc, char **argv)
 
 	/* compare hash */
 	QLineEdit *test = new QLineEdit;
-	test->setValidator(new HexVal);
+	HexVal hexval;
+	test->setValidator(&hexval);
 	test->setToolTip(Window::tr("Compare hash"));
 
 	QObject::connect(test, &QLineEdit::textChanged,
@@ -158,7 +159,7 @@ int main(int argc, char **argv)
 			std::stringstream html;
 			if (hashVal != "")
 				html << "<style>.h" << hashVal << "{color:green}</style>";
-			html << "<div style='margin-bottom:2; font-size:31px'><i><b>" << vals.name << "</b></i></div>";
+			html << "<div style='margin-bottom:2; font-size:27px'><i><b>" << vals.name << "</b></i></div>";
 			html << "<div style='margin-bottom:7; margin-left:23; font-size:13px'>" << vals.path << "</div>";
 			if (!ALL(vals,"")) {
 				html << "<div style='font-size:13px'><table>";
@@ -194,7 +195,7 @@ int main(int argc, char **argv)
 	hash->setToolTip(Window::tr("Compare hash"));
 	QObject::connect(hash, &QPushButton::toggled, stack, &QStackedLayout::setCurrentIndex);
 
-	/* store meth */
+	/* store method */
 	QSettings settings("H4KvT", "H4KvT");
 
 	/* hashing method */
@@ -287,11 +288,11 @@ int main(int argc, char **argv)
 		});
 
 	/* about app */
-	QMenu *about = new QMenu;
+	QMenu about;
 	QObject::connect(hash, &QWidget::customContextMenuRequested,
-		[&about, &hash](const QPoint &pos) { about->exec(hash->mapToGlobal(pos)); });
+		[&about, &hash](const QPoint &pos) { about.exec(hash->mapToGlobal(pos)); });
 
-	QAction *action = about->addAction(QIcon(":/icon"), Window::tr("About %1").arg(APP_NAME));
+	QAction *action = about.addAction(QIcon(":/icon"), Window::tr("About %1").arg(APP_NAME));
 	action->setMenuRole(QAction::AboutRole);
 	QObject::connect(action, &QAction::triggered, &window, &Window::about);
 
