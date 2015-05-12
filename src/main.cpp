@@ -149,8 +149,12 @@ int main(int argc, char **argv)
 
 	/* translations */
 	QTranslator qtr;
-	if (qtr.load("H4KvT_" + QLocale::system().name(), ":/"))
+	if (qtr.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
 		app.installTranslator(&qtr);
+
+	QTranslator htr;
+	if (htr.load("H4KvT_" + QLocale::system().name(), ":/"))
+		app.installTranslator(&htr);
 
 	/* display information */
 	QTextEdit *text = new QTextEdit;
