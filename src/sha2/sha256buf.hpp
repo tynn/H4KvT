@@ -17,25 +17,29 @@
  *	along with H4KvT. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <ostream>
-#include <string>
+#ifndef sha256buf_class
+#define sha256buf_class
 
-#include "sha1buf.hpp"
-#include "sha1.h"
+#include <cstdint>
+#include "../hashbuf.hpp"
 
-static std::string sha1sum(const std::string msg)
+typedef hashbuf_t<8, uint32_t, 64, uint64_t> _sha256buf;
+class sha256buf : public _sha256buf
 {
-	sha1buf sha1;
-	std::ostream out(&sha1);
-	out << msg;
-	return sha1.hex();
-}
+	public:
+		explicit sha256buf();
 
-#define SHA1TEST(msg,digit) if (sha1sum(msg) != #digit) return 1;
+	protected:
+		explicit sha256buf(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t);
 
-int main()
-{
-	SHA1_TEST_SUITE
-	return 0;
-}
+	private:
+		int sync();
+		void update();
+
+		void update_sha256(uint32_t &, uint32_t &, uint32_t &, uint32_t &, uint32_t &, uint32_t &, uint32_t &, uint32_t &);
+
+		uint32_t H0, H1, H2, H3, H4, H5, H6, H7;
+};
+
+#endif
 

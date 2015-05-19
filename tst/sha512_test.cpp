@@ -20,22 +20,22 @@
 #include <ostream>
 #include <string>
 
-#include "sha1buf.hpp"
-#include "sha1.h"
+#include "sha512buf.hpp"
+#include "sha512.h"
 
-static std::string sha1sum(const std::string msg)
+static std::string sha512sum(const std::string msg)
 {
-	sha1buf sha1;
-	std::ostream out(&sha1);
+	sha512buf sha512;
+	std::ostream out(&sha512);
 	out << msg;
-	return sha1.hex();
+	return sha512.hex();
 }
 
-#define SHA1TEST(msg,digit) if (sha1sum(msg) != #digit) return 1;
+#define SHA512TEST(msg,digit) if (sha512sum(msg) != #digit) return 1;
 
 int main()
 {
-	SHA1_TEST_SUITE
+	SHA512_TEST_SUITE
 	return 0;
 }
 

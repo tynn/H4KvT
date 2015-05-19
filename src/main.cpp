@@ -32,22 +32,27 @@
 #include "hashbuf.hpp"
 #include "md5/md5buf.hpp"
 #include "sha1/sha1buf.hpp"
+#include "sha2/sha224buf.hpp"
+#include "sha2/sha256buf.hpp"
+#include "sha2/sha384buf.hpp"
+#include "sha2/sha512buf.hpp"
 
 
 struct Vals {
 	Vals() : Vals("", "") { _f = false; }
 	Vals(const QString &qname, const QString &qpath)
-		: md5(""), sha1(""), _f(true)
+		: md5(""), sha1(""), sha224(""), sha256(""), sha384(""), sha512(""), _f(true)
 	{
 		name = qname.toStdString();
 		path = qpath.toStdString();
 	}
 	std::string name, path;
-	std::string md5, sha1;
+	std::string md5, sha1, sha224, sha256, sha384, sha512;
 	bool _f;
 };
-#define ANY(vals,val) (vals.md5==val||vals.sha1==val)
-#define ALL(vals,val) (vals.md5==val&&vals.sha1==val)
+#define _EQ_LO(vals,EQ,LO) (vals.md5 EQ LO vals.sha1 EQ LO vals.sha224 EQ LO vals.sha256 EQ LO vals.sha384 EQ LO vals.sha512 EQ)
+#define ANY(vals,val) _EQ_LO(vals,==val,||)
+#define ALL(vals,val) _EQ_LO(vals,==val,&&)
 
 static Vals & operator<<=(Vals &left, const Vals &right)
 {
@@ -64,6 +69,14 @@ static Vals & operator+=(Vals &left, const Vals &right)
 		left.md5 = right.md5;
 	if (right.sha1 != "")
 		left.sha1 = right.sha1;
+	if (right.sha224 != "")
+		left.sha224 = right.sha224;
+	if (right.sha256 != "")
+		left.sha256 = right.sha256;
+	if (right.sha384 != "")
+		left.sha384 = right.sha384;
+	if (right.sha512 != "")
+		left.sha512 = right.sha512;
 	return left;
 }
 
@@ -76,18 +89,27 @@ static std::string hash(const std::string filename, hashbuf &&buf)
 	return buf.hex();
 }
 
-static Vals update(int which, Vals vals)
+static Vals update(const QString which, Vals vals)
 {
 	try {
-		switch (which) {
-			case 0:
-				if (vals.md5 == "")
-					vals.md5 = hash(vals.path, md5buf());
-				break;
-			case 1:
-				if (vals.sha1 == "")
-					vals.sha1 = hash(vals.path, sha1buf());
-				break;
+		if (which == "md5") {
+			if (vals.md5 == "")
+				vals.md5 = hash(vals.path, md5buf());
+		} else if (which == "sha1") {
+			if (vals.sha1 == "")
+				vals.sha1 = hash(vals.path, sha1buf());
+		} else if (which == "sha224") {
+			if (vals.sha224 == "")
+				vals.sha224 = hash(vals.path, sha224buf());
+		} else if (which == "sha256") {
+			if (vals.sha256 == "")
+				vals.sha256 = hash(vals.path, sha256buf());
+		} else if (which == "sha384") {
+			if (vals.sha384 == "")
+				vals.sha384 = hash(vals.path, sha384buf());
+		} else if (which == "sha512") {
+			if (vals.sha512 == "")
+				vals.sha512 = hash(vals.path, sha512buf());
 		}
 	} catch (std::ifstream::failure &) {
 		vals.name = strerror(errno);
@@ -184,6 +206,14 @@ int main(int argc, char **argv)
 					html << "<tr><td>md5: </td><td class='h" << vals.md5 << "'>" << vals.md5 << "</td</tr>";
 				if (vals.sha1 != "")
 					html << "<tr><td>sha1: </td><td class='h" << vals.sha1 << "'>" << vals.sha1 << "</td</tr>";
+				if (vals.sha224 != "")
+					html << "<tr><td>sha224: </td><td class='h" << vals.sha224 << "'>" << vals.sha224 << "</td</tr>";
+				if (vals.sha256 != "")
+					html << "<tr><td>sha256: </td><td class='h" << vals.sha256 << "'>" << vals.sha256 << "</td</tr>";
+				if (vals.sha384 != "")
+					html << "<tr><td>sha384: </td><td class='h" << vals.sha384 << "'>" << vals.sha384 << "</td</tr>";
+				if (vals.sha512 != "")
+					html << "<tr><td>sha512: </td><td class='h" << vals.sha512 << "'>" << vals.sha512 << "</td</tr>";
 				html << "</table></div>";
 			}
 			int horizontal = text->horizontalScrollBar()->value();
@@ -218,8 +248,7 @@ int main(int argc, char **argv)
 	/* more methods */
 	bool more;
 	try {
-		more = moreOrLess();
-		settings.setValue("MoreHashingMethods", more);
+		settings.setValue("MoreHashingMethods", more = moreOrLess());
 	} catch (...) {
 		more = settings.value("MoreHashingMethods", false).toBool();
 	}
@@ -228,14 +257,16 @@ int main(int argc, char **argv)
 	QComboBox *meth = new QComboBox;
 	meth->addItem("md5");
 	meth->addItem("sha1");
-	//meth->addItem("sha256");
-	//meth->addItem("sha512");
+	if (more) meth->addItem("sha224");
+	meth->addItem("sha256");
+	if (more) meth->addItem("sha384");
+	meth->addItem("sha512");
 	meth->setToolTip(Window::tr("Hashing method"));
-	meth->setCurrentIndex(settings.value("HashingMethod", 0).toInt());
+	meth->setCurrentText(settings.value("HashingMethod", "md5").toString());
 	QObject::connect(&window, &Window::idle, meth, &QWidget::setEnabled);
 
-	QObject::connect(meth, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-		[&settings](int index) { settings.setValue("HashingMethod", index); });
+	QObject::connect(meth, &QComboBox::currentTextChanged,
+		[&](const QString &text) { settings.setValue("HashingMethod", text); });
 
 	/* toolbar */
 	QHBoxLayout *pane = new QHBoxLayout;
@@ -269,16 +300,16 @@ int main(int argc, char **argv)
 			}
 		});
 
-	QObject::connect(meth, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-		[&](int index) { if (vals.name != "") {
+	QObject::connect(meth, &QComboBox::currentTextChanged,
+		[&](const QString &text) { if (vals.name != "") {
 			window.idle(false);
-			zu.setFuture(QtConcurrent::run(&update, index, vals));
+			zu.setFuture(QtConcurrent::run(&update, text, vals));
 		}});
 
 	QObject::connect(&window, &Window::fileDroped,
 		[&](const QString &name, const QString &path) {
 			window.idle(false);
-			zu.setFuture(QtConcurrent::run(&update, meth->currentIndex(), Vals(name, path)));
+			zu.setFuture(QtConcurrent::run(&update, meth->currentText(), Vals(name, path)));
 		});
 
 	/* hashing info */

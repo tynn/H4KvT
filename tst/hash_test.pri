@@ -1,6 +1,7 @@
 include(def_test.pri)
 
-SRC_DIR = ../src/$$TEST
+defined(HASH, var):SRC_DIR = ../src/$$HASH
+else:SRC_DIR = ../src/$$TEST
 
 QMAKE_INCDIR += $$SRC_DIR
 
