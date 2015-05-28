@@ -20,6 +20,7 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QString>
 #include <QUrl>
 #include <QWidget>
 
@@ -58,7 +59,7 @@ static bool _accept_drag(const QMimeData *data)
 	if (data->hasUrls())
 		for (QUrl &url: data->urls())
 			if (url.isLocalFile()) {
-				QFileInfo info(url.path());
+				QFileInfo info(url.toLocalFile());
 				if (info.isFile() && info.isReadable())
 					i++;
 			}
@@ -81,8 +82,8 @@ void Window::dragEnterEvent(QDragEnterEvent *event)
 void Window::dropEvent(QDropEvent *event)
 {
 	for (QUrl &url: event->mimeData()->urls())
-		if (url.isLocalFile() && QFileInfo(url.path()).isFile()) {
-			emit fileDroped(url.fileName(), url.path());
+		if (url.isLocalFile() && QFileInfo(url.toLocalFile()).isFile()) {
+			emit fileDroped(url.fileName(), url.toLocalFile());
 			break;
 		}
 }
