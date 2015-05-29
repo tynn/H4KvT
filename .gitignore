@@ -1,6 +1,14 @@
 # Local
+
 H4KvT
 *.run
+
+# Static win32
+
+*_plugin_import.cpp
+*.rc
+release
+debug
 
 # C++ objects and libs
 
