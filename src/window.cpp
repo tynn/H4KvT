@@ -41,9 +41,9 @@
 
 Window::Window(QWidget *parent) : QMainWindow(parent)
 {
-	setAcceptDrops(true);
 	resize(631, 157);
 	setCentralWidget(new QWidget);
+	setAcceptDrops(true);
 	dropable = true;
 	connect(this, &Window::idle, this, &Window::setDropable);
 }

@@ -189,6 +189,7 @@ int main(int argc, char **argv)
 	QLineEdit *test = new QLineEdit;
 	HexVal hexval;
 	test->setValidator(&hexval);
+	test->installEventFilter(&window);
 	test->setToolTip(Window::tr("Compare hash"));
 
 	QObject::connect(test, &QLineEdit::textChanged,
@@ -229,7 +230,9 @@ int main(int argc, char **argv)
 	error->setStyleSheet("color:red");
 
 	/* test or error */
-	QStackedLayout *stack = new Stack;
+	QStackedWidget *stack = new QStackedWidget;
+	delete stack->layout();
+	stack->setLayout(new Stack);
 	stack->addWidget(error);
 	stack->addWidget(test);
 	stack->setCurrentIndex(1);
@@ -240,7 +243,7 @@ int main(int argc, char **argv)
 	hash->setChecked(true);
 	hash->setContextMenuPolicy(Qt::CustomContextMenu);
 	hash->setToolTip(Window::tr("Compare hash"));
-	QObject::connect(hash, &QPushButton::toggled, stack, &QStackedLayout::setCurrentIndex);
+	QObject::connect(hash, &QPushButton::toggled, stack, &QStackedWidget::setCurrentIndex);
 
 	/* store method */
 	QSettings settings("H4KvT", "H4KvT");
@@ -271,7 +274,7 @@ int main(int argc, char **argv)
 	/* toolbar */
 	QHBoxLayout *pane = new QHBoxLayout;
 	pane->addWidget(hash, 0, Qt::AlignLeft);
-	pane->addLayout(stack);
+	pane->addWidget(stack);
 	pane->addWidget(meth, 0, Qt::AlignRight);
 
 	/* main layout */
@@ -281,7 +284,6 @@ int main(int argc, char **argv)
 
 	/* the window */
 	window.centralWidget()->setLayout(layout);
-	test->installEventFilter(&window);
 	window.show();
 
 	/* future hashing */
