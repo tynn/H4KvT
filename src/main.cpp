@@ -82,7 +82,7 @@ static Vals & operator+=(Vals &left, const Vals &right)
 
 static std::string hash(const std::string filename, hashbuf &&buf)
 {
-	std::ifstream in(filename);
+	std::ifstream in(filename, std::ifstream::in|std::ifstream::binary);
 	in.exceptions(std::ifstream::failbit|std::ifstream::badbit);
 	std::ostream out(&buf);
 	out << in.rdbuf();
