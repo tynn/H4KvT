@@ -25,8 +25,6 @@
 #include <QObject>
 #include <QString>
 
-#define APP_NAME "H4KvT"
-
 class Window : public QMainWindow
 {
 	Q_OBJECT

@@ -27,11 +27,9 @@
 #include "window.hpp"
 
 
-#define _MSTRING(tag) #tag
-#define _TAG_EXT(tag) "/releases/tag/" _MSTRING(tag)
-#define GITHUB_BASE "https://github.com/tynn/H4KvT"
+#define GITHUB_BASE "https://github.com/tynn/" APP_NAME
 #ifdef RTAG
-#define GITHUB_URL GITHUB_BASE _TAG_EXT(RTAG)
+#define GITHUB_URL GITHUB_BASE "/releases/tag/v" APP_VERSION
 #define QT_VERSION_FORMAT "<a href='https://download.qt.io/official_releases/qt/'>%1</a>"
 #else
 #define GITHUB_URL GITHUB_BASE
@@ -90,7 +88,7 @@ void Window::dropEvent(QDropEvent *event)
 
 void Window::about()
 {
-	QMessageBox::about(this, tr("About %1").arg(APP_NAME),
+	QMessageBox::about(this, tr("About %1").arg(APP_NAME " v" APP_VERSION),
 			QString::fromLatin1("<p><i>" APP_NAME "</i> %1.</p><p>Copyright (C) %2 Christian Schmitz</p>")
 				.arg(tr("is a simple application to calculate hashes of files")).arg(2015)
 			+ tr("<p>This program is free software: you can redistribute it and/or modify "

@@ -38,12 +38,8 @@
 #include "sha2/sha512buf.hpp"
 
 
-#ifdef QTR_PATH
-#define _STRING(def) #def
-#define _QSTRING(def) QString::fromStdString(_STRING(def))
-#define QTR_PATH_STRING _QSTRING(QTR_PATH)
-#else
-#define QTR_PATH_STRING QLibraryInfo::location(QLibraryInfo::TranslationsPath)
+#ifndef QTR_PATH
+#define QTR_PATH QLibraryInfo::location(QLibraryInfo::TranslationsPath)
 #endif
 
 
@@ -180,7 +176,7 @@ int main(int argc, char **argv)
 
 	/* translations */
 	QTranslator qtr;
-	if (qtr.load("qt_" + QLocale::system().name(), QTR_PATH_STRING))
+	if (qtr.load("qt_" + QLocale::system().name(), QTR_PATH))
 		app.installTranslator(&qtr);
 
 	QTranslator htr;
