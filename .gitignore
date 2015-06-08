@@ -7,6 +7,7 @@ H4KvT
 
 *_plugin_import.cpp
 *.rc
+object_script.*
 release
 debug
 

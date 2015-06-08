@@ -8,8 +8,8 @@
         <translation>Hier Dateien zum Hashen hinziehen</translation>
     </message>
     <message>
-        <source>Compare hash</source>
-        <translation>Hash abgleichen</translation>
+        <source>Compare hashes</source>
+        <translation>Hashwerte abgleichen</translation>
     </message>
     <message>
         <source>Hashing method</source>
@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>is a simple application to calculate hashes of files</source>
-        <translation>ist eine einfache Anwendung um Hashe von Dateien zu erzeugen</translation>
+        <translation>ist eine einfache Anwendung um Hashwerte von Dateien zu erzeugen</translation>
     </message>
     <message>
         <source>&lt;p&gt;This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.&lt;/p&gt;&lt;p&gt;This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.&lt;/p&gt;&lt;p&gt;You should have received a copy of the GNU General Public License along with this program.  If not, see &lt;a href=&apos;http://%1&apos;&gt;%1&lt;/p&gt;</source>

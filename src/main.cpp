@@ -38,6 +38,15 @@
 #include "sha2/sha512buf.hpp"
 
 
+#ifdef QTR_PATH
+#define _STRING(def) #def
+#define _QSTRING(def) QString::fromStdString(_STRING(def))
+#define QTR_PATH_STRING _QSTRING(QTR_PATH)
+#else
+#define QTR_PATH_STRING QLibraryInfo::location(QLibraryInfo::TranslationsPath)
+#endif
+
+
 struct Vals {
 	Vals() : Vals("", "") { _f = false; }
 	Vals(const QString &qname, const QString &qpath)
@@ -171,7 +180,7 @@ int main(int argc, char **argv)
 
 	/* translations */
 	QTranslator qtr;
-	if (qtr.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
+	if (qtr.load("qt_" + QLocale::system().name(), QTR_PATH_STRING))
 		app.installTranslator(&qtr);
 
 	QTranslator htr;
@@ -190,7 +199,7 @@ int main(int argc, char **argv)
 	HexVal hexval;
 	test->setValidator(&hexval);
 	test->installEventFilter(&window);
-	test->setToolTip(Window::tr("Compare hash"));
+	test->setToolTip(Window::tr("Compare hashes"));
 
 	QObject::connect(test, &QLineEdit::textChanged,
 		[&](const QString &newValue) { if (vals.name != "") {
@@ -242,7 +251,7 @@ int main(int argc, char **argv)
 	hash->setCheckable(true);
 	hash->setChecked(true);
 	hash->setContextMenuPolicy(Qt::CustomContextMenu);
-	hash->setToolTip(Window::tr("Compare hash"));
+	hash->setToolTip(Window::tr("Compare hashes"));
 	QObject::connect(hash, &QPushButton::toggled, stack, &QStackedWidget::setCurrentIndex);
 
 	/* store method */
