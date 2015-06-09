@@ -246,7 +246,6 @@ int main(int argc, char **argv)
 	QPushButton *hash = new QPushButton(QIcon(":/icon"), "");
 	hash->setCheckable(true);
 	hash->setChecked(true);
-	hash->setContextMenuPolicy(Qt::CustomContextMenu);
 	hash->setToolTip(Window::tr("Compare hashes"));
 	QObject::connect(hash, &QPushButton::toggled, stack, &QStackedWidget::setCurrentIndex);
 
@@ -353,12 +352,34 @@ int main(int argc, char **argv)
 
 	/* about app */
 	QMenu about;
-	QObject::connect(hash, &QWidget::customContextMenuRequested,
-		[&about, &hash](const QPoint &pos) { about.exec(hash->mapToGlobal(pos)); });
-
 	QAction *action = about.addAction(QIcon(":/icon"), Window::tr("About %1").arg(APP_NAME));
 	action->setMenuRole(QAction::AboutRole);
 	QObject::connect(action, &QAction::triggered, &window, &Window::about);
+
+	error->setContextMenuPolicy(Qt::NoContextMenu);
+	hash->setContextMenuPolicy(Qt::NoContextMenu);
+	meth->setContextMenuPolicy(Qt::NoContextMenu);
+	window.setContextMenuPolicy(Qt::CustomContextMenu);
+	QObject::connect(&window, &QWidget::customContextMenuRequested,
+		[&about, &window](const QPoint &pos) { about.popup(window.mapToGlobal(pos)); });
+
+	text->setContextMenuPolicy(Qt::CustomContextMenu);
+	QObject::connect(text, &QWidget::customContextMenuRequested,
+		[action, text](const QPoint &pos) {
+			if (QMenu *m = text->createStandardContextMenu()) {
+				m->insertAction(m->insertSeparator(m->actions()[0]), action);
+				m->popup(text->mapToGlobal(pos));
+			}
+		});
+
+	test->setContextMenuPolicy(Qt::CustomContextMenu);
+	QObject::connect(test, &QWidget::customContextMenuRequested,
+		[action, test](const QPoint &pos) {
+			if (QMenu *m = test->createStandardContextMenu()) {
+				m->insertAction(m->insertSeparator(m->actions()[0]), action);
+				m->popup(test->mapToGlobal(pos));
+			}
+		});
 
 	return app.exec();
 }
