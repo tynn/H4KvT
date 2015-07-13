@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = H4KvT
-VERSION = 0.1
+VERSION = 1.0
 
 QT += concurrent widgets
 CONFIG += c++11
@@ -39,7 +39,7 @@ qtr.commands = lupdate $$_PRO_FILE_ -locations none && lrelease $$_PRO_FILE_
 QMAKE_EXTRA_TARGETS += qtr
 
 QMAKE_TARGET_COPYRIGHT = GPLv3+
-QMAKE_TARGET_DESCRIPTION = \43\43\43
+QMAKE_TARGET_DESCRIPTION = \43\43\43\43\43
 
 QMAKE_DISTCLEAN += -r tmp debug release object_script.H4KvT.* H4KvT_resource.rc
 

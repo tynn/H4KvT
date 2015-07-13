@@ -104,7 +104,7 @@ void Window::about()
 			+ tr("<p>You can download the source code via <a href='%1'>GitHub</a>.</p>").arg(GITHUB_URL)
 			+ "<hr>" + tr("<p>This program uses %1 version %2.</p>"
 						"<p>Copyright (C) %3 Digia Plc and/or its subsidiary(-ies) and other contributors.</p>"
-						"<p>Qt is a trademark of Digia Plc and/or its subsidiary(-ies).</p>").arg("<a href='https://qt.io'>Qt</a>")
+						"<p>Qt is a trademark of Digia Plc and/or its subsidiary(-ies).</p>").arg("<a href='https://www.qt.io'>Qt</a>")
 				.arg(QString::fromLatin1(QT_VERSION_FORMAT).arg(qVersion())).arg(2015));
 }
 
