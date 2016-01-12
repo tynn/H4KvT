@@ -3,6 +3,12 @@
 H4KvT
 *.run
 
+# OS X
+
+.DS_Store
+*.app
+*.dmg
+
 # Static win32
 
 *_plugin_import.cpp
